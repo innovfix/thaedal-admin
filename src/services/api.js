@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+// Base URL for the API - update this for production
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api/v1',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -32,53 +35,71 @@ api.interceptors.response.use(
   }
 );
 
-// API endpoints
+// API endpoints - All admin routes are under /admin prefix
 export const authApi = {
   login: (data) => api.post('/admin/login', data),
   logout: () => api.post('/admin/logout'),
-};
-
-export const videoApi = {
-  getAll: (params) => api.get('/videos', { params }),
-  getById: (id) => api.get(`/videos/${id}`),
-  create: (data) => api.post('/videos', data),
-  update: (id, data) => api.put(`/videos/${id}`, data),
-  delete: (id) => api.delete(`/videos/${id}`),
-};
-
-export const categoryApi = {
-  getAll: () => api.get('/categories'),
-  create: (data) => api.post('/categories', data),
-  update: (id, data) => api.put(`/categories/${id}`, data),
-  delete: (id) => api.delete(`/categories/${id}`),
-};
-
-export const userApi = {
-  getAll: (params) => api.get('/users', { params }),
-  getById: (id) => api.get(`/users/${id}`),
-  update: (id, data) => api.put(`/users/${id}`, data),
-  delete: (id) => api.delete(`/users/${id}`),
-};
-
-export const creatorApi = {
-  getAll: (params) => api.get('/creators', { params }),
-  getById: (id) => api.get(`/creators/${id}`),
-  create: (data) => api.post('/creators', data),
-  update: (id, data) => api.put(`/creators/${id}`, data),
-  delete: (id) => api.delete(`/creators/${id}`),
-};
-
-export const subscriptionApi = {
-  getPlans: () => api.get('/subscriptions/plans'),
-  getAll: (params) => api.get('/subscriptions', { params }),
-};
-
-export const paymentApi = {
-  getAll: (params) => api.get('/payments', { params }),
+  profile: () => api.get('/admin/profile'),
 };
 
 export const dashboardApi = {
   getStats: () => api.get('/admin/stats'),
+};
+
+export const videoApi = {
+  getAll: (params) => api.get('/admin/videos', { params }),
+  getById: (id) => api.get(`/admin/videos/${id}`),
+  create: (data) => api.post('/admin/videos', data),
+  update: (id, data) => api.put(`/admin/videos/${id}`, data),
+  delete: (id) => api.delete(`/admin/videos/${id}`),
+};
+
+export const categoryApi = {
+  getAll: (params) => api.get('/admin/categories', { params }),
+  getById: (id) => api.get(`/admin/categories/${id}`),
+  create: (data) => api.post('/admin/categories', data),
+  update: (id, data) => api.put(`/admin/categories/${id}`, data),
+  delete: (id) => api.delete(`/admin/categories/${id}`),
+};
+
+export const userApi = {
+  getAll: (params) => api.get('/admin/users', { params }),
+  getById: (id) => api.get(`/admin/users/${id}`),
+  delete: (id) => api.delete(`/admin/users/${id}`),
+  toggleSubscription: (id) => api.post(`/admin/users/${id}/toggle-subscription`),
+};
+
+export const creatorApi = {
+  getAll: (params) => api.get('/admin/creators', { params }),
+  getById: (id) => api.get(`/admin/creators/${id}`),
+};
+
+export const subscriptionApi = {
+  getPlans: () => api.get('/admin/subscriptions/plans'),
+  getAll: (params) => api.get('/admin/subscriptions', { params }),
+  getById: (id) => api.get(`/admin/subscriptions/${id}`),
+  updateStatus: (id, status) => api.post(`/admin/subscriptions/${id}/status`, { status }),
+};
+
+export const paymentApi = {
+  getAll: (params) => api.get('/admin/payments', { params }),
+  getById: (id) => api.get(`/admin/payments/${id}`),
+};
+
+export const legalPageApi = {
+  getAll: () => api.get('/admin/legal-pages'),
+  getById: (pageType) => api.get(`/admin/legal-pages/${pageType}`),
+  update: (pageType, data) => api.put(`/admin/legal-pages/${pageType}`, data),
+};
+
+export const notificationApi = {
+  getHistory: () => api.get('/admin/notifications'),
+  send: (data) => api.post('/admin/notifications/send', data),
+};
+
+export const paymentSettingsApi = {
+  get: () => api.get('/admin/payment-settings'),
+  update: (data) => api.put('/admin/payment-settings', data),
 };
 
 export default api;
